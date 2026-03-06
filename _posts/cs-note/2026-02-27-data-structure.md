@@ -263,6 +263,7 @@ flowchart LR
 
 알고리즘 활용:
 - **슬라이딩 윈도우 최댓값/최솟값**: 덱에 모노톤 순서를 유지하며 윈도우의 최댓값/최솟값을 O(1)에 조회. 전체 O(n)
+
 ```java
 // 슬라이딩 윈도우 최댓값 (크기 k)
 public static int[] slidingMax(int[] nums, int k) {
@@ -284,6 +285,7 @@ public static int[] slidingMax(int[] nums, int k) {
     return result;
 }
 ```
+
 - **0-1 BFS**: 간선 가중치가 0 또는 1인 그래프에서 최단 경로. 가중치 0이면 앞에 push, 1이면 뒤에 push. Dijkstra 대신 O(V+E)에 해결
 - **Palindrome 검사**: 양끝에서 비교하며 진행
 - **Steal-Based Work Scheduling**: Java ForkJoinPool에서 각 스레드가 자신의 deque를 사용해 작업을 push/pop하고, 유휴 스레드가 다른 스레드의 deque 반대쪽에서 작업을 "steal"

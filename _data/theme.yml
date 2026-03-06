@@ -1,0 +1,109 @@
+default_mode: system
+storage_key: mandoobox-theme
+
+labels:
+  home: Home
+  theme: Theme
+  light: Light
+  dark: Dark
+  all: 전체
+  category: 카테고리
+  toc: 목차
+  empty_posts: 선택한 카테고리의 게시물이 없습니다.
+
+fonts:
+  body: '"Pretendard", "SUIT", "Noto Sans KR", sans-serif'
+  heading: '"Pretendard", "SUIT", "Noto Sans KR", sans-serif'
+  code: '"JetBrains Mono", "Cascadia Code", "Fira Code", monospace'
+
+layout:
+  content_width: "920px"
+  radius_large: "24px"
+  radius_medium: "18px"
+  radius_small: "12px"
+  shadow_soft: "0 22px 60px rgba(15, 23, 42, 0.10)"
+  shadow_strong: "0 30px 80px rgba(2, 6, 23, 0.18)"
+
+palette:
+  light:
+    bg: "#f6f4ef"
+    bg_alt: "#efebe3"
+    surface: "#fffdfa"
+    surface_strong: "#f7f3ec"
+    text: "#20252b"
+    text_soft: "#55606d"
+    text_faint: "#7a8592"
+    brand: "#2f6b73"
+    brand_strong: "#1f535a"
+    brand_soft: "#ddebea"
+    border: "#ddd8ce"
+    border_strong: "#c7c0b4"
+    code_bg: "#1f2430"
+    code_bg_alt: "#262c39"
+    code_text: "#e8eef5"
+    code_inline_bg: "#dbe9ea"
+    code_inline_text: "#18484f"
+    mermaid_bg: "#fffdfa"
+    selection: "#dbeceb"
+  dark:
+    bg: "#111518"
+    bg_alt: "#171c20"
+    surface: "#181e23"
+    surface_strong: "#1d252b"
+    text: "#e7e2da"
+    text_soft: "#b3bdc8"
+    text_faint: "#8793a1"
+    brand: "#7fc3bc"
+    brand_strong: "#9ad8d2"
+    brand_soft: "#223735"
+    border: "#2d363d"
+    border_strong: "#404b54"
+    code_bg: "#0f1319"
+    code_bg_alt: "#161c24"
+    code_text: "#e7edf6"
+    code_inline_bg: "#2a3f45"
+    code_inline_text: "#d0f1ec"
+    mermaid_bg: "#181e23"
+    selection: "#23403d"
+
+code_highlight:
+  light:
+    base: "#e7edf5"
+    comment: "#8d96a7"
+    keyword: "#d4a2e8"
+    string: "#a9d7a0"
+    function: "#f0c674"
+    variable: "#9cb5f5"
+    type: "#86cbc4"
+    number: "#f0a28b"
+    operator: "#eef3f8"
+  dark:
+    base: "#e7edf6"
+    comment: "#8290a3"
+    keyword: "#ddb1f0"
+    string: "#aedaa6"
+    function: "#f3ca7c"
+    variable: "#a6c1ff"
+    type: "#8fd6cf"
+    number: "#f2ac93"
+    operator: "#f1f5fb"
+
+og:
+  background_start: "#0f0f23"
+  background_mid: "#1a1a3e"
+  background_end: "#0f0f23"
+  accent_fill: "#23264b"
+  accent_border: "#4f5bb7"
+  accent_text: "#c7d2fe"
+  meta_text: "#8b93a7"
+  title_text: "#f8fafc"
+  subtitle_text: "#aab2c5"
+  tag_fill: "#1a1d31"
+  tag_border: "#2d334c"
+  tag_text: "#9ca3af"
+  footer_text: "#7a8195"
+  mark_start: "#6366f1"
+  mark_end: "#8b5cf6"
+  logo_mark: "M"
+  avatar_path: "assets/image/home.png"
+  avatar_url: "https://avatars.githubusercontent.com/u/264350557?s=200&v=4"

@@ -1,0 +1,32 @@
+{% assign og_image_path = nil %}
+
+{% if page.og_image %}
+  {% assign og_image_path = page.og_image %}
+{% elsif page.image %}
+  {% if page.image.path %}
+    {% assign og_image_path = page.image.path %}
+  {% else %}
+    {% assign og_image_path = page.image %}
+  {% endif %}
+{% elsif page.collection == 'posts' %}
+  {% assign og_image_path = '/assets/og/posts/' | append: page.slug | append: '.png' %}
+{% elsif page.url == '/' %}
+  {% assign og_image_path = '/assets/og/home.png' %}
+{% else %}
+  {% assign og_image_path = '/assets/og/site.png' %}
+{% endif %}
+
+{% if og_image_path %}
+  {% if og_image_path contains '://' %}
+    {% assign og_image_url = og_image_path %}
+  {% else %}
+    {% assign og_image_url = og_image_path | absolute_url %}
+  {% endif %}
+  <meta property="og:image" content="{{ og_image_url }}">
+  <meta property="og:image:secure_url" content="{{ og_image_url }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ page.title | default: site.title }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{{ og_image_url }}">
+{% endif %}

@@ -1,0 +1,32 @@
+{% assign comments = site.data.comments %}
+{% if comments and comments.enabled and comments.provider == 'utterances' and comments.utterances and comments.utterances.repo %}
+  {% assign light_theme = comments.utterances.theme.light | default: 'github-light' %}
+  {% assign dark_theme = comments.utterances.theme.dark | default: 'github-dark' %}
+  <section class="post-comments" data-comments data-theme-light="{{ light_theme }}" data-theme-dark="{{ dark_theme }}">
+    <div class="post-comments__header">
+      <h2 class="post-comments__title">{{ comments.title | default: 'Comments' }}</h2>
+      {% if comments.description %}
+        <p class="post-comments__description">{{ comments.description }}</p>
+      {% endif %}
+    </div>
+    <script>
+      (function () {
+        var container = document.currentScript.parentElement;
+        var theme = document.documentElement.dataset.theme === "dark"
+          ? container.dataset.themeDark
+          : container.dataset.themeLight;
+        var script = document.createElement("script");
+
+        script.src = "https://utteranc.es/client.js";
+        script.async = true;
+        script.setAttribute("repo", {{ comments.utterances.repo | jsonify }});
+        script.setAttribute("issue-term", {{ comments.utterances.issue_term | default: 'pathname' | jsonify }});
+        script.setAttribute("label", {{ comments.utterances.label | default: 'comment' | jsonify }});
+        script.setAttribute("theme", theme || "github-light");
+        script.setAttribute("crossorigin", "anonymous");
+
+        container.appendChild(script);
+      })();
+    </script>
+  </section>
+{% endif %}

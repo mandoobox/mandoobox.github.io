@@ -1,0 +1,107 @@
+{% assign theme = site.data.theme %}
+<style>
+  :root {
+    --font-body: {{ theme.fonts.body }};
+    --font-heading: {{ theme.fonts.heading }};
+    --font-code: {{ theme.fonts.code }};
+    --content-width: {{ theme.layout.content_width }};
+    --radius-large: {{ theme.layout.radius_large }};
+    --radius-medium: {{ theme.layout.radius_medium }};
+    --radius-small: {{ theme.layout.radius_small }};
+    --shadow-soft: {{ theme.layout.shadow_soft }};
+    --shadow-strong: {{ theme.layout.shadow_strong }};
+    --bg: {{ theme.palette.light.bg }};
+    --bg-alt: {{ theme.palette.light.bg_alt }};
+    --surface: {{ theme.palette.light.surface }};
+    --surface-strong: {{ theme.palette.light.surface_strong }};
+    --text: {{ theme.palette.light.text }};
+    --text-soft: {{ theme.palette.light.text_soft }};
+    --text-faint: {{ theme.palette.light.text_faint }};
+    --brand: {{ theme.palette.light.brand }};
+    --brand-strong: {{ theme.palette.light.brand_strong }};
+    --brand-soft: {{ theme.palette.light.brand_soft }};
+    --border: {{ theme.palette.light.border }};
+    --border-strong: {{ theme.palette.light.border_strong }};
+    --code-bg: {{ theme.palette.light.code_bg }};
+    --code-bg-alt: {{ theme.palette.light.code_bg_alt }};
+    --code-text: {{ theme.palette.light.code_text }};
+    --code-inline-bg: {{ theme.palette.light.code_inline_bg }};
+    --code-inline-text: {{ theme.palette.light.code_inline_text }};
+    --mermaid-bg: {{ theme.palette.light.mermaid_bg }};
+    --selection: {{ theme.palette.light.selection }};
+    --token-base: {{ theme.code_highlight.light.base }};
+    --token-comment: {{ theme.code_highlight.light.comment }};
+    --token-keyword: {{ theme.code_highlight.light.keyword }};
+    --token-string: {{ theme.code_highlight.light.string }};
+    --token-function: {{ theme.code_highlight.light.function }};
+    --token-variable: {{ theme.code_highlight.light.variable }};
+    --token-type: {{ theme.code_highlight.light.type }};
+    --token-number: {{ theme.code_highlight.light.number }};
+    --token-operator: {{ theme.code_highlight.light.operator }};
+    color-scheme: light;
+  }
+
+  html[data-theme="dark"] {
+    --bg: {{ theme.palette.dark.bg }};
+    --bg-alt: {{ theme.palette.dark.bg_alt }};
+    --surface: {{ theme.palette.dark.surface }};
+    --surface-strong: {{ theme.palette.dark.surface_strong }};
+    --text: {{ theme.palette.dark.text }};
+    --text-soft: {{ theme.palette.dark.text_soft }};
+    --text-faint: {{ theme.palette.dark.text_faint }};
+    --brand: {{ theme.palette.dark.brand }};
+    --brand-strong: {{ theme.palette.dark.brand_strong }};
+    --brand-soft: {{ theme.palette.dark.brand_soft }};
+    --border: {{ theme.palette.dark.border }};
+    --border-strong: {{ theme.palette.dark.border_strong }};
+    --code-bg: {{ theme.palette.dark.code_bg }};
+    --code-bg-alt: {{ theme.palette.dark.code_bg_alt }};
+    --code-text: {{ theme.palette.dark.code_text }};
+    --code-inline-bg: {{ theme.palette.dark.code_inline_bg }};
+    --code-inline-text: {{ theme.palette.dark.code_inline_text }};
+    --mermaid-bg: {{ theme.palette.dark.mermaid_bg }};
+    --selection: {{ theme.palette.dark.selection }};
+    --token-base: {{ theme.code_highlight.dark.base }};
+    --token-comment: {{ theme.code_highlight.dark.comment }};
+    --token-keyword: {{ theme.code_highlight.dark.keyword }};
+    --token-string: {{ theme.code_highlight.dark.string }};
+    --token-function: {{ theme.code_highlight.dark.function }};
+    --token-variable: {{ theme.code_highlight.dark.variable }};
+    --token-type: {{ theme.code_highlight.dark.type }};
+    --token-number: {{ theme.code_highlight.dark.number }};
+    --token-operator: {{ theme.code_highlight.dark.operator }};
+    color-scheme: dark;
+  }
+</style>
+
+<script>
+  window.MandooBoxTheme = {
+    storageKey: {{ theme.storage_key | jsonify }},
+    defaultMode: {{ theme.default_mode | jsonify }},
+    labels: {
+      theme: {{ theme.labels.theme | jsonify }},
+      light: {{ theme.labels.light | jsonify }},
+      dark: {{ theme.labels.dark | jsonify }}
+    }
+  };
+
+  (function () {
+    var config = window.MandooBoxTheme;
+    var storedMode = null;
+
+    try {
+      storedMode = localStorage.getItem(config.storageKey);
+    } catch (error) {
+      storedMode = null;
+    }
+
+    var systemMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    var fallbackMode = config.defaultMode === "dark" || config.defaultMode === "light"
+      ? config.defaultMode
+      : systemMode;
+    var resolvedMode = storedMode === "dark" || storedMode === "light" ? storedMode : fallbackMode;
+
+    document.documentElement.dataset.theme = resolvedMode;
+    document.documentElement.style.colorScheme = resolvedMode;
+  })();
+</script>

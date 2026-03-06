@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="{{ page.lang | default: site.lang | default: 'ko' }}">
+  {% assign theme = site.data.theme %}
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>
+      {% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}
+    </title>
+    {% include theme-head.html %}
+    <link rel="icon" type="image/png" href="https://avatars.githubusercontent.com/u/264350557?s=200&amp;v=4">
+    <link rel="apple-touch-icon" href="https://avatars.githubusercontent.com/u/264350557?s=200&amp;v=4">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300,0,0&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    {% seo %}
+    {% include og-meta.html %}
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" defer crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" defer crossorigin="anonymous"></script>
+    <script src="{{ '/assets/js/theme-toggle.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/site-ui.js' | relative_url }}" defer></script>
+    {% if site.data.comments and site.data.comments.enabled %}
+    <script src="{{ '/assets/js/comments.js' | relative_url }}" defer></script>
+    {% endif %}
+    <script src="{{ '/assets/js/math-render.js' | relative_url }}" defer></script>
+    <script type="module" src="{{ '/assets/js/mermaid-init.js' | relative_url }}"></script>
+  </head>
+  <body class="page-{{ page.layout | default: 'default' | slugify }}">
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="logo" href="{{ '/' | relative_url }}">
+          <img class="logo-mark" src="{{ '/assets/image/home.png' | relative_url }}" alt="" width="48" height="48">
+          <span class="logo-copy">
+            <span class="logo-title">{{ site.title }}</span>
+            <!-- {% if site.description %}
+              <span class="logo-subtitle">{{ site.description }}</span>
+            {% endif %} -->
+          </span>
+        </a>
+
+        <div class="header-actions">
+          <nav class="site-nav">
+            <a href="{{ '/' | relative_url }}">
+              <span class="material-symbols-outlined" aria-hidden="true">home</span>
+              <span class="sr-only">{{ theme.labels.home }}</span>
+            </a>
+          </nav>
+
+          <button class="theme-toggle" type="button" data-theme-toggle>
+            <span class="material-symbols-outlined theme-toggle__icon" data-theme-icon aria-hidden="true">{% if theme.default_mode == 'dark' %}dark_mode{% else %}light_mode{% endif %}</span>
+            <span class="theme-toggle__value sr-only" data-theme-label aria-live="polite">{% if theme.default_mode == 'dark' %}{{ theme.labels.dark }}{% else %}{{ theme.labels.light }}{% endif %}</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container content">
+      {{ content }}
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <small>{{ site.title }} | Built with Jekyll and GitHub Pages</small>
+      </div>
+    </footer>
+  </body>
+</html>

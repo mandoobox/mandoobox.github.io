@@ -1,0 +1,12 @@
+enabled: true
+provider: utterances
+title: Comments
+description: Sign in with GitHub to join the discussion.
+
+utterances:
+  repo: mandoobox/mandoobox.github.io
+  issue_term: pathname
+  label: comment
+  theme:
+    light: github-light
+    dark: github-dark

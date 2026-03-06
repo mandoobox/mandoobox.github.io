@@ -1,0 +1,42 @@
+---
+layout: default
+---
+
+{% assign page_category = page.category %}
+{% if page_category == nil and page.categories and page.categories.size > 0 %}
+  {% assign page_category = page.categories | first %}
+{% endif %}
+
+<div class="post-shell">
+  <article class="post">
+    <header class="post-header">
+      <h1>{{ page.title }}</h1>
+      <div class="meta">
+        <span class="meta-item">
+          <span class="material-symbols-outlined meta-icon" aria-hidden="true">schedule</span>
+          <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y-%m-%d" }}</time>
+        </span>
+        {% if page_category %}
+        <span class="meta-item">
+          <span class="material-symbols-outlined meta-icon" aria-hidden="true">sell</span>
+          <span class="meta-tag">{{ page_category }}</span>
+        </span>
+        {% endif %}
+      </div>
+    </header>
+
+    <section class="post-content" data-toc-content>
+      {{ content }}
+    </section>
+
+    {% include comments.html %}
+  </article>
+
+  <aside class="post-toc" data-toc-root hidden>
+    <div class="post-toc__title">
+      <span class="material-symbols-outlined" aria-hidden="true">toc</span>
+      <span>{{ site.data.theme.labels.toc }}</span>
+    </div>
+    <nav class="post-toc__nav" data-toc-nav aria-label="{{ site.data.theme.labels.toc }}"></nav>
+  </aside>
+</div>

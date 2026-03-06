@@ -477,6 +477,71 @@ img {
   font-size: 0.95rem;
 }
 
+.post-share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem 0.85rem;
+  margin-top: 1rem;
+}
+
+.post-share__label {
+  color: var(--text-faint);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.post-share__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.post-share__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.35rem;
+  padding: 0.45rem 0.78rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 0.88rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+.post-share__button:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+.post-share__button .material-symbols-outlined {
+  font-size: 0.95rem;
+}
+
+.post-share__button.is-success {
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--border));
+  color: var(--brand);
+}
+
+.post-share__feedback {
+  flex-basis: 100%;
+  min-height: 1lh;
+  color: var(--text-faint);
+  font-size: 0.84rem;
+}
+
+.post-share__feedback[data-state="success"] {
+  color: var(--brand);
+}
+
 .post-content {
   min-width: 0;
   font-size: 1.02rem;
@@ -875,6 +940,15 @@ table::-webkit-scrollbar-thumb,
 
   .theme-toggle {
     justify-content: center;
+  }
+
+  .post-share {
+    align-items: flex-start;
+  }
+
+  .post-share__label,
+  .post-share__actions {
+    width: 100%;
   }
 
   .post-list li {

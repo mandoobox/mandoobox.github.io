@@ -23,6 +23,26 @@ layout: default
         </span>
         {% endif %}
       </div>
+
+      <div
+        class="post-share"
+        data-share-root
+        data-share-title="{{ page.title | escape }}"
+        data-share-url="{{ page.url | absolute_url | escape }}"
+      >
+        <span class="post-share__label">Share</span>
+        <div class="post-share__actions">
+          <button class="post-share__button" type="button" data-share-native hidden>
+            <span class="material-symbols-outlined" aria-hidden="true">ios_share</span>
+            <span>Share</span>
+          </button>
+          <button class="post-share__button" type="button" data-share-copy>
+            <span class="material-symbols-outlined" aria-hidden="true">link</span>
+            <span>Copy link</span>
+          </button>
+        </div>
+        <span class="post-share__feedback" data-share-feedback aria-live="polite"></span>
+      </div>
     </header>
 
     <section class="post-content" data-toc-content>

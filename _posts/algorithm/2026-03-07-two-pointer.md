@@ -256,6 +256,20 @@ int minLengthAtLeastS(int[] arr, int s) {
 조건을 만족하면 start를 줄인다
 ```
 
+```mermaid
+flowchart TD
+    A["start=0, end=0, sum=0"] --> B["sum += arr[end]"]
+    B --> C{"sum ≥ target?"}
+    C -->|No| D["end++"]
+    D --> B
+    C -->|Yes| E["길이 갱신"]
+    E --> F["sum -= arr[start]"]
+    F --> G["start++"]
+    G --> C
+```
+
+이 흐름이 가변 윈도우의 핵심 루프다. `end`를 늘려 조건을 만족시킨 뒤, `start`를 줄여 최소 길이를 탐색한다.
+
 ---
 
 ## 7. 합이 정확히 M인 연속 부분 배열 개수

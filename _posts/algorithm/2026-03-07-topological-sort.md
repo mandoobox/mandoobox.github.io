@@ -118,6 +118,21 @@ flowchart TD
 3 -> 4
 ```
 
+```mermaid
+graph LR
+    N1((1)) --> N3((3))
+    N2((2)) --> N3
+    N3 --> N4((4))
+
+    style N1 fill:#99ccff
+    style N2 fill:#99ccff
+    style N3 fill:#ffcc99
+    style N4 fill:#ccffcc
+```
+
+파란색 노드 `1`, `2`는 indegree가 0이므로 처음에 큐에 들어간다.
+주황색 `3`은 indegree가 2이므로 선행 노드가 모두 처리된 후에야 큐에 들어간다.
+
 초기 indegree:
 
 - 1: 0

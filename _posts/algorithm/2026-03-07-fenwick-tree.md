@@ -52,14 +52,14 @@ lowbit(i) = i & -i
 
 ```mermaid
 flowchart LR
-    T1["tree[1]\n[1..1]"]
-    T2["tree[2]\n[1..2]"]
-    T3["tree[3]\n[3..3]"]
-    T4["tree[4]\n[1..4]"]
-    T5["tree[5]\n[5..5]"]
-    T6["tree[6]\n[5..6]"]
-    T7["tree[7]\n[7..7]"]
-    T8["tree[8]\n[1..8]"]
+    T1["tree[1]<br>[1..1]"]
+    T2["tree[2]<br>[1..2]"]
+    T3["tree[3]<br>[3..3]"]
+    T4["tree[4]<br>[1..4]"]
+    T5["tree[5]<br>[5..5]"]
+    T6["tree[6]<br>[5..6]"]
+    T7["tree[7]<br>[7..7]"]
+    T8["tree[8]<br>[1..8]"]
 
     T1 --- T2 --- T3 --- T4 --- T5 --- T6 --- T7 --- T8
 

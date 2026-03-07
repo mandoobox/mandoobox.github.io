@@ -195,8 +195,8 @@ prefix[4] - prefix[1] = 17 - 5 = 12
 
 ```mermaid
 flowchart LR
-    A["prefix[1] = 5\narr[0]까지의 합"] --> C["prefix[4] - prefix[1]"]
-    B["prefix[4] = 17\narr[0]~arr[3]까지의 합"] --> C
+    A["prefix[1] = 5<br>arr[0]까지의 합"] --> C["prefix[4] - prefix[1]"]
+    B["prefix[4] = 17<br>arr[0]~arr[3]까지의 합"] --> C
     C --> D["arr[1..3]의 합 = 12"]
 ```
 
@@ -439,8 +439,8 @@ prefix[x2][y2]
 flowchart TB
     subgraph Whole["prefix[x2][y2] 전체 영역"]
         direction LR
-        A["A\nprefix[x1-1][y1-1]\n두 번 빠진 모서리"] --- B["B\nprefix[x1-1][y2]\n위쪽에서 한 번 뺌"]
-        C["C\nprefix[x2][y1-1]\n왼쪽에서 한 번 뺌"] --- D["답 구간\n(x1, y1) ~ (x2, y2)"]
+        A["A<br>prefix[x1-1][y1-1]<br>두 번 빠진 모서리"] --- B["B<br>prefix[x1-1][y2]<br>위쪽에서 한 번 뺌"]
+        C["C<br>prefix[x2][y1-1]<br>왼쪽에서 한 번 뺌"] --- D["답 구간<br>(x1, y1) ~ (x2, y2)"]
     end
 
     F["계산식: 전체 - B - C + A"] --> R["직사각형 구간 합"]

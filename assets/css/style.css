@@ -867,8 +867,7 @@ table::-webkit-scrollbar-thumb,
 }
 
 .mermaid {
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding: 1rem;
   background: var(--surface);
   min-height: 4rem;
@@ -883,12 +882,19 @@ table::-webkit-scrollbar-thumb,
 .mermaid__svg-wrap {
   display: flex;
   justify-content: center;
+  padding: 8px 16px;
+  overflow: visible;
 }
 
 .mermaid__svg-wrap svg {
   display: block;
   max-width: 100%;
   height: auto;
+  overflow: visible;
+}
+
+.mermaid__svg-wrap svg * {
+  overflow: visible;
 }
 
 /* ── Loading skeleton ── */

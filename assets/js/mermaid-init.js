@@ -142,9 +142,35 @@
       /* Normalise the SVG for responsive display */
       var svg = wrap.querySelector("svg");
       if (svg) {
-        svg.removeAttribute("height");
+        /* Remove fixed dimensions so CSS controls sizing */
+        svg.removeAttribute("width");
+        // svg.removeAttribute("height");
         svg.style.maxWidth = "100%";
         svg.style.height = "auto";
+        svg.style.overflow = "visible";
+
+        /* Pad the viewBox generously so text at edges is never
+           clipped. kroki.io returns very tight viewBoxes that
+           cut through descenders, ascenders and Korean glyphs. */
+        var vb = svg.getAttribute("viewBox");
+        if (vb) {
+          var parts = vb.split(/[\s,]+/).map(Number);
+          if (parts.length === 4 && parts.every(function (n) { return !isNaN(n); })) {
+            var PAD = 30;
+            parts[0] -= PAD;        // min-x
+            parts[1] -= PAD;        // min-y
+            parts[2] += PAD * 2;    // width
+            parts[3] += PAD * 2;    // height
+            svg.setAttribute("viewBox", parts.join(" "));
+          }
+        }
+
+        /* Remove any internal clip-path that kroki.io embeds,
+           which can independently clip node text at edges. */
+        var clips = svg.querySelectorAll("clipPath");
+        clips.forEach(function (cp) { cp.remove(); });
+        var clipped = svg.querySelectorAll("[clip-path]");
+        clipped.forEach(function (el) { el.removeAttribute("clip-path"); });
       }
 
       container.appendChild(wrap);

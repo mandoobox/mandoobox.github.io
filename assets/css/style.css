@@ -724,13 +724,13 @@ h4 code,
 
 div.highlighter-rouge,
 .mermaid {
-  overflow: hidden;
   margin: 1.5rem 0;
   border: 1px solid var(--border);
   border-radius: var(--radius-small);
 }
 
 div.highlighter-rouge {
+  overflow: hidden;
   background: var(--code-bg);
 }
 
@@ -867,21 +867,68 @@ table::-webkit-scrollbar-thumb,
 }
 
 .mermaid {
+  overflow-x: auto;
+  overflow-y: hidden;
   padding: 1rem;
   background: var(--surface);
+  min-height: 4rem;
+  transition: min-height 300ms ease;
 }
 
-.mermaid svg {
+.mermaid--loaded {
+  min-height: 0;
+}
+
+/* ── SVG wrapper ── */
+.mermaid__svg-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.mermaid__svg-wrap svg {
   display: block;
   max-width: 100%;
   height: auto;
-  margin: 0 auto;
 }
 
+/* ── Loading skeleton ── */
+.mermaid__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+}
+
+.mermaid__skeleton-bar {
+  height: 0.85rem;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--border) 25%,
+    var(--surface-strong) 50%,
+    var(--border) 75%
+  );
+  background-size: 200% 100%;
+  animation: mermaid-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes mermaid-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Error fallback ── */
 .mermaid--error {
+  min-height: 0;
+}
+
+.mermaid__fallback {
+  margin: 0;
   white-space: pre-wrap;
   color: var(--text-soft);
   font-family: var(--font-code);
+  font-size: 0.85rem;
+  line-height: 1.6;
 }
 
 .site-footer {

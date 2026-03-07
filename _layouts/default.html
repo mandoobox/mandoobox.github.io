@@ -11,6 +11,9 @@
     {% include theme-head.html %}
     <link rel="icon" type="image/png" href="https://avatars.githubusercontent.com/u/264350557?s=200&amp;v=4">
     <link rel="apple-touch-icon" href="https://avatars.githubusercontent.com/u/264350557?s=200&amp;v=4">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300,0,0&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
@@ -24,7 +27,7 @@
     <script src="{{ '/assets/js/comments.js' | relative_url }}" defer></script>
     {% endif %}
     <script src="{{ '/assets/js/math-render.js' | relative_url }}" defer></script>
-    <script type="module" src="{{ '/assets/js/mermaid-init.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/mermaid-init.js' | relative_url }}" defer></script>
   </head>
   <body class="page-{{ page.layout | default: 'default' | slugify }}">
     <header class="site-header">

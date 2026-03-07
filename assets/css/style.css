@@ -192,20 +192,29 @@ h6 {
   margin: 2.4rem 0 1rem;
   color: var(--text);
   font-family: var(--font-heading);
+  font-weight: 620;
   letter-spacing: -0.03em;
-  line-height: 1.18;
+  line-height: 1.22;
 }
 
 h1 {
-  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  font-size: clamp(1.72rem, 2.8vw, 2.3rem);
+  font-weight: 640;
 }
 
 h2 {
-  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-size: clamp(1.32rem, 2.1vw, 1.7rem);
+  font-weight: 620;
 }
 
 h3 {
-  font-size: clamp(1.28rem, 2.2vw, 1.55rem);
+  font-size: clamp(1.12rem, 1.55vw, 1.28rem);
+  font-weight: 600;
+}
+
+h4 {
+  font-size: clamp(1rem, 1.2vw, 1.08rem);
+  font-weight: 580;
 }
 
 p,
@@ -545,6 +554,40 @@ img {
 .post-content {
   min-width: 0;
   font-size: 1.02rem;
+}
+
+/* Keep markdown headings calmer than the global page scale. */
+.page-post .post-header h1 {
+  font-size: clamp(1.58rem, 2.15vw, 1.98rem);
+  font-weight: 630;
+  line-height: 1.2;
+}
+
+.page-post .post-content h1,
+.page-post .post-content h2,
+.page-post .post-content h3,
+.page-post .post-content h4 {
+  line-height: 1.24;
+}
+
+.page-post .post-content h1 {
+  font-size: clamp(1.52rem, 2.05vw, 1.86rem);
+  font-weight: 620;
+}
+
+.page-post .post-content h2 {
+  font-size: clamp(1.2rem, 1.65vw, 1.42rem);
+  font-weight: 600;
+}
+
+.page-post .post-content h3 {
+  font-size: clamp(1.08rem, 1.32vw, 1.2rem);
+  font-weight: 580;
+}
+
+.page-post .post-content h4 {
+  font-size: clamp(0.98rem, 1.08vw, 1.04rem);
+  font-weight: 560;
 }
 
 .post-comments {

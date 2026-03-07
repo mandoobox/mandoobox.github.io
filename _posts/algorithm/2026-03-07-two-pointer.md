@@ -94,11 +94,11 @@ sum += arr[end + 1];
 
 ```mermaid
 flowchart TD
-    A["Two pointer"] --> B{"Continuous subarray"}
-    B -->|Yes| C["Sliding window"]
-    B -->|No| D{"Sorted pair search"}
-    D -->|Yes| E["Left and right pointers"]
-    D -->|No| F["Use another method"]
+    A["Two Pointer"] --> B{"연속 부분 배열"}
+    B -->|Yes| C["Sliding Window"]
+    B -->|No| D{"정렬된 쌍 탐색"}
+    D -->|Yes| E["왼쪽/오른쪽 포인터"]
+    D -->|No| F["다른 방법 사용"]
 ```
 
 즉 투 포인터를 쓸지 판단할 때는 먼저 "연속 구간 문제인가"와 "정렬된 쌍 문제인가"를 구분하는 것이 가장 빠르다.

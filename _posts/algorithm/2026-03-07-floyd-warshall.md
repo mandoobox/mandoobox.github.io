@@ -76,10 +76,10 @@ Floyd-Warshall 알고리즘은 그래프에서 **모든 정점 쌍 사이의 최
 
 ```mermaid
 flowchart TD
-    A["Open node k"] --> B["Check every pair"]
-    B --> C{"Path through k is shorter"}
-    C -->|Yes| D["Update distance"]
-    C -->|No| E["Keep current distance"]
+    A["경유지 k 개방"] --> B["모든 쌍 (i,j) 검사"]
+    B --> C{"k를 경유하는 경로가 더 짧음"}
+    C -->|Yes| D["거리 갱신"]
+    C -->|No| E["현재 거리 유지"]
 ```
 
 이 다이어그램처럼 Floyd-Warshall은 "경유지 `k`를 하나 열고, 모든 `(i, j)` 쌍을 검사해서 더 짧아지면 갱신"하는 과정을 반복한다.

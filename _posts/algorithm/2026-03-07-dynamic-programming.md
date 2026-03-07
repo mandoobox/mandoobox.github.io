@@ -126,11 +126,11 @@ DP 문제를 풀 때는 아래 순서가 가장 중요하다.
 
 ```mermaid
 flowchart TD
-    A["Define state"] --> B["Write transition"]
-    B --> C["Set base cases"]
-    C --> D["Choose fill order"]
-    D --> E["Fill table or memoize"]
-    E --> F["Read final answer"]
+    A["상태 정의"] --> B["점화식 작성"]
+    B --> C["Base case 설정"]
+    C --> D["채우기 순서 결정"]
+    D --> E["테이블 채우기 또는 Memoization"]
+    E --> F["최종 답 읽기"]
 ```
 
 DP는 결국 이 순서대로 정리하는 작업이다. 코드보다 먼저 이 흐름이 머릿속에서 정리되어야 점화식이 흔들리지 않는다.

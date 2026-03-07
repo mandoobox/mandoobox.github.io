@@ -225,13 +225,13 @@ int find(int x) {
 
 ```mermaid
 flowchart LR
-    subgraph BEFORE["Before compression"]
+    subgraph BEFORE["압축 전"]
         A4["4"] --> A3["3"]
         A3 --> A2["2"]
         A2 --> A1["1"]
     end
 
-    subgraph AFTER["After compression"]
+    subgraph AFTER["압축 후"]
         B4["4"] --> B1["1"]
         B3["3"] --> B1
         B2["2"] --> B1
@@ -417,15 +417,18 @@ long kruskal(int n, List<Edge> edges) {
 
 ```mermaid
 flowchart TD
-    A["Sort edges by cost"] --> B["Pick cheapest edge"]
-    B --> C{"Same component?"}
-    C -->|Yes| D["Skip"]
-    C -->|No| E["Union and add to MST"]
-    D --> F{"N minus 1 edges?"}
+    A["간선을 비용 순 정렬"] --> B["가장 싼 간선 선택"]
+    B --> C{"같은 컴포넌트?"}
+    C -->|Yes| D["건너뛰"]
+    C -->|No| E["Union 후 MST에 추가"]
+    D --> F{"N-1개 간선?"}
     E --> F
     F -->|No| B
-    F -->|Yes| G["MST complete"]
+    F -->|Yes| G["MST 완성"]
 ```
+
+Union-Find가 빠른 이유는,
+Kruskal이 매 간선마다 해야 하는 "이미 같은 집합인가?" 판별을 거의 상수 시간에 처리해 주기 때문이다.
 
 ---
 

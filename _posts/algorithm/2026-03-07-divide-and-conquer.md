@@ -42,14 +42,14 @@ tags: [algorithm, divide-and-conquer]
 
 ```mermaid
 flowchart TD
-    A["Problem (size N)"] --> B["Divide"]
-    B --> C["Subproblem 1 (N/2)"]
-    B --> D["Subproblem 2 (N/2)"]
-    C --> E["Solve recursively"]
-    D --> F["Solve recursively"]
-    E --> G["Combine results"]
+    A["문제 (크기 N)"] --> B["분할"]
+    B --> C["부분문제 1 (N/2)"]
+    B --> D["부분문제 2 (N/2)"]
+    C --> E["재귀적 해결"]
+    D --> F["재귀적 해결"]
+    E --> G["결과 병합"]
     F --> G
-    G --> H["Final answer"]
+    G --> H["최종 답"]
 ```
 
 핵심 차이:
@@ -121,6 +121,10 @@ flowchart TD
     L --> N["[1, 2, 3, 4, 5, 6, 7, 8]"]
     M --> N
 ```
+
+분할은 위에서 아래로 진행되지만,
+실제로 정렬된 결과가 만들어지는 순간은 리프까지 내려간 뒤
+작은 정렬 결과를 아래에서 위로 병합해 올라올 때다.
 
 ---
 
@@ -336,6 +340,9 @@ graph TD
     style D fill:#ccffcc
 ```
 
+핵심은 지수를 1씩 줄이지 않고 절반씩 줄인다는 점이다.
+그래서 행렬 곱셈 자체는 무겁더라도 반복 횟수는 `O(log N)`으로 줄어든다.
+
 ```text
 일반 방법: M을 8번 곱함 → 곱셈 7회
 분할 정복: M → M² → M⁴ → M⁸ → 곱셈 3회
@@ -358,15 +365,19 @@ N=10⁹일 때 곱셈 30회로 완료
 
 ```mermaid
 flowchart TD
-    A["Sort by x"] --> B["Divide into left & right"]
-    B --> C["Find closest pair in left"]
-    B --> D["Find closest pair in right"]
+    A["x 좌표로 정렬"] --> B["왼쪽/오른쪽 분할"]
+    B --> C["왼쪽 최근접 쌍 찾기"]
+    B --> D["오른쪽 최근접 쌍 찾기"]
     C --> E["d = min(d_left, d_right)"]
     D --> E
-    E --> F["Check strip: points within d of midline"]
-    F --> G["Update minimum if closer pair found"]
-    G --> H["Return closest distance"]
+    E --> F["중앙선 기준 d 이내 strip 검사"]
+    F --> G["더 가까운 쌍 발견 시 갱신"]
+    G --> H["최근접 거리 반환"]
 ```
+
+여기서 진짜 핵심은 `strip` 단계다.
+왼쪽과 오른쪽에서 이미 구한 최소 거리 `d`보다 더 가까운 쌍은
+중앙선 근처 폭 `d` 안에서만 새로 나타날 수 있기 때문이다.
 
 ---
 

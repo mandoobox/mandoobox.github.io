@@ -71,14 +71,14 @@ tags: [algorithm, segment-tree]
 
 ```mermaid
 flowchart TD
-    A["One to eight"] --> B["One to four"]
-    A --> C["Five to eight"]
-    B --> D["One to two"]
-    B --> E["Three to four"]
-    C --> F["Five to six"]
-    C --> G["Seven to eight"]
-    D --> H["One"]
-    D --> I["Two"]
+    A["1~8 구간"] --> B["1~4 구간"]
+    A --> C["5~8 구간"]
+    B --> D["1~2 구간"]
+    B --> E["3~4 구간"]
+    C --> F["5~6 구간"]
+    C --> G["7~8 구간"]
+    D --> H["1"]
+    D --> I["2"]
 ```
 
 각 노드는 자기 구간의 정보를 저장한다.
@@ -168,11 +168,11 @@ value: 5 8 6 3
 
 ```mermaid
 flowchart TD
-    A["Current node range"] --> B{"Outside query range"}
-    B -->|Yes| C["Return identity value"]
-    B -->|No| D{"Fully inside query range"}
-    D -->|Yes| E["Use current node value"]
-    D -->|No| F["Split to left and right child"]
+    A["현재 노드 구간"] --> B{"쿼리 범위 밖"}
+    B -->|Yes| C["항등원 반환"]
+    B -->|No| D{"쿼리 범위에 완전히 포함"}
+    D -->|Yes| E["현재 노드 값 사용"]
+    D -->|No| F["왼쪽/오른쪽 자식으로 분할"]
 ```
 
 여기서 `identity value`는 연산에 따라 달라진다.
@@ -356,10 +356,10 @@ update(1, 1, n, idx, diff);
 
 ```mermaid
 flowchart TD
-    A["Range update on node"] --> B["Store lazy value"]
-    B --> C["Later: query or update touches children"]
-    C --> D["Push lazy down to children"]
-    D --> E["Clear parent lazy"]
+    A["구간 갱신"] --> B["Lazy 값 저장"]
+    B --> C["나중에 자식 노드 접근 시"]
+    C --> D["Lazy 값을 자식에게 전파"]
+    D --> E["부모 Lazy 초기화"]
 ```
 
 즉 "게으르게" 전파하기 때문에 Lazy라고 부른다.

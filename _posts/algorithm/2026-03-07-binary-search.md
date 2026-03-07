@@ -58,11 +58,11 @@ mid를 기준으로 왼쪽 또는 오른쪽 절반만 남긴다
 
 ```mermaid
 flowchart LR
-    A["Invalid"] --> B["Invalid"]
-    B --> C["Invalid"]
-    C --> D["Valid"]
-    D --> E["Valid"]
-    E --> F["Valid"]
+    A["불가능"] --> B["불가능"]
+    B --> C["불가능"]
+    C --> D["가능"]
+    D --> E["가능"]
+    E --> F["가능"]
 ```
 
 이처럼 `불가능 -> 가능` 또는 `가능 -> 불가능`이 한 번만 바뀌면 이분 탐색이 가능하다.
@@ -208,8 +208,8 @@ upperBound(arr, x) - lowerBound(arr, x)
 
 ```mermaid
 flowchart LR
-    A["known < target"] --> B["candidate [left, right)"]
-    B --> C["known >= target"]
+    A["확정 영역 < target"] --> B["후보 구간 [left, right)"]
+    B --> C["확정 영역 >= target"]
 ```
 
 이 관점에서 보면:

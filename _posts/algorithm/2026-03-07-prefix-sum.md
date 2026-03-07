@@ -76,7 +76,7 @@ prefix[r + 1] - prefix[l]
 
 ```mermaid
 flowchart LR
-    subgraph "prefix array"
+    subgraph "누적합 배열"
         P0["P[0]=0"] --> P1["P[1]=5"]
         P1 --> P2["P[2]=7"]
         P2 --> P3["P[3]=14"]
@@ -192,6 +192,16 @@ prefix[4] - prefix[1] = 17 - 5 = 12
 ```
 
 즉 앞부분을 한 번에 빼는 방식이다.
+
+```mermaid
+flowchart LR
+    A["prefix[1] = 5\narr[0]까지의 합"] --> C["prefix[4] - prefix[1]"]
+    B["prefix[4] = 17\narr[0]~arr[3]까지의 합"] --> C
+    C --> D["arr[1..3]의 합 = 12"]
+```
+
+즉 `prefix[4]` 안에는 필요한 구간과 필요 없는 앞부분이 함께 들어 있고,
+`prefix[1]`을 빼는 순간 앞부분만 정확히 제거된다.
 
 ---
 
@@ -425,19 +435,19 @@ prefix[x2][y2]
 
 이건 **포함-배제 원리(Inclusion-Exclusion)**다. 그림으로 보면 바로 이해된다.
 
-```text
-전체 영역 prefix[x2][y2]에서:
+```mermaid
+flowchart TB
+    subgraph Whole["prefix[x2][y2] 전체 영역"]
+        direction LR
+        A["A\nprefix[x1-1][y1-1]\n두 번 빠진 모서리"] --- B["B\nprefix[x1-1][y2]\n위쪽에서 한 번 뺌"]
+        C["C\nprefix[x2][y1-1]\n왼쪽에서 한 번 뺌"] --- D["답 구간\n(x1, y1) ~ (x2, y2)"]
+    end
 
-+---+---+---+
-| D |   B   |     A = prefix[x1-1][y1-1]  ← 두 번 빠졌으므로 다시 더함
-+---+-------+     B = prefix[x1-1][y2]    ← 한 번 뺌
-|   |       |     C = prefix[x2][y1-1]    ← 한 번 뺌
-| C | 구간  |     전체 - B - C + A = 구간 합
-|   |       |
-+---+-------+
-
-답 = prefix[x2][y2] - B - C + A
+    F["계산식: 전체 - B - C + A"] --> R["직사각형 구간 합"]
 ```
+
+즉 `B`와 `C`를 빼면 원하는 직사각형만 남을 것 같지만,
+왼쪽 위 모서리 `A`가 두 번 빠지므로 한 번 다시 더해 줘야 한다.
 
 ---
 

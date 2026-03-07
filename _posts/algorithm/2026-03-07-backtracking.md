@@ -52,12 +52,15 @@ tags: [algorithm, backtracking]
 
 ```mermaid
 flowchart TD
-    A["Choose"] --> B["Go deeper"]
-    B --> C{"Still valid"}
-    C -->|Yes| D["Try next choice"]
+    A["선택"] --> B["더 깊이 탐색"]
+    B --> C{"유효한가"}
+    C -->|Yes| D["다음 선택지 시도"]
     C -->|No| E["Backtrack"]
     D --> B
 ```
+
+즉 백트래킹의 핵심은 "끝까지 갔다가 돌아온다"가 아니라,
+조건이 틀린 순간 더 내려가지 않고 곧바로 이전 상태로 복구한다는 데 있다.
 
 ---
 
@@ -106,12 +109,12 @@ void dfs(int depth) {
 
 ```mermaid
 flowchart TD
-    R["Start"] --> A1["Include 1"]
-    R --> A2["Exclude 1"]
-    A1 --> B1["Include 2"]
-    A1 --> B2["Exclude 2"]
-    A2 --> B3["Include 2"]
-    A2 --> B4["Exclude 2"]
+    R["시작"] --> A1["1 포함"]
+    R --> A2["1 제외"]
+    A1 --> B1["2 포함"]
+    A1 --> B2["2 제외"]
+    A2 --> B3["2 포함"]
+    A2 --> B4["2 제외"]
     B1 --> C1["{1,2,3}"]
     B1 --> C2["{1,2}"]
     B2 --> C3["{1,3}"]
@@ -119,7 +122,7 @@ flowchart TD
     B3 --> C5["{2,3}"]
     B3 --> C6["{2}"]
     B4 --> C7["{3}"]
-    B4 --> C8["empty set"]
+    B4 --> C8["공집합"]
 ```
 
 즉 각 재귀 호출은 트리의 한 노드이고,

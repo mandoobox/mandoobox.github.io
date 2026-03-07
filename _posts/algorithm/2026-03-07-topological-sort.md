@@ -93,15 +93,15 @@ indegree[v] = v로 들어오는 간선 수
 
 ```mermaid
 flowchart TD
-    A["Enqueue nodes with indegree zero"] --> B["Pop from queue"]
-    B --> C["Add to answer"]
-    C --> D["Decrease neighbor indegree"]
-    D --> E{"New indegree zero?"}
-    E -->|Yes| F["Enqueue new node"]
-    F --> G{"Queue empty?"}
+    A["Indegree 0인 노드 큐에 삽입"] --> B["큐에서 추출"]
+    B --> C["답에 추가"]
+    C --> D["인접 노드 Indegree 감소"]
+    D --> E{"Indegree가 0이 됨?"}
+    E -->|Yes| F["새 노드 큐에 삽입"]
+    F --> G{"큐가 비었는가?"}
     E -->|No| G
     G -->|No| B
-    G -->|Yes| H["Done"]
+    G -->|Yes| H["완료"]
 ```
 
 즉 "지금 당장 할 수 있는 일"을 하나씩 꺼내는 구조다.

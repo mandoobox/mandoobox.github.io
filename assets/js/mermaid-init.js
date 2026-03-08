@@ -176,6 +176,9 @@
       container.appendChild(wrap);
       container.classList.add("mermaid--loaded");
       container.classList.remove("mermaid--error");
+
+      /* Attach zoom/pan behaviour */
+      attachZoom(container, wrap);
     }).catch(function () {
       removeSkeleton(container);
       container.classList.add("mermaid--error");
@@ -187,6 +190,166 @@
       pre.className = "mermaid__fallback";
       pre.textContent = source;
       container.appendChild(pre);
+    });
+  }
+
+  /* ── Zoom / Pan ── */
+  var MIN_SCALE = 0.5;
+  var MAX_SCALE = 4;
+  var ZOOM_STEP = 0.15;
+
+  function attachZoom(container, wrap) {
+    var svg = wrap.querySelector("svg");
+    if (!svg) return;
+
+    var state = { scale: 1, panX: 0, panY: 0 };
+    var dragging = false;
+    var startX = 0, startY = 0, startPanX = 0, startPanY = 0;
+
+    function applyTransform(smooth) {
+      svg.style.transition = smooth ? "transform 150ms ease-out" : "none";
+      svg.style.transform =
+        "translate(" + state.panX + "px, " + state.panY + "px) scale(" + state.scale + ")";
+    }
+
+    function zoomAt(delta, cx, cy) {
+      var rect = wrap.getBoundingClientRect();
+      /* Cursor position relative to wrapper */
+      var ox = cx - rect.left;
+      var oy = cy - rect.top;
+
+      var oldScale = state.scale;
+      var newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, oldScale + delta));
+      if (newScale === oldScale) return;
+
+      /* Adjust pan so zoom centres on cursor */
+      var ratio = newScale / oldScale;
+      state.panX = ox - ratio * (ox - state.panX);
+      state.panY = oy - ratio * (oy - state.panY);
+      state.scale = newScale;
+      applyTransform(false);
+    }
+
+    function resetZoom() {
+      state.scale = 1;
+      state.panX = 0;
+      state.panY = 0;
+      applyTransform(true);
+    }
+
+    /* ── Controls ── */
+    var controls = document.createElement("div");
+    controls.className = "mermaid__zoom-controls";
+    controls.innerHTML =
+      '<button class="mermaid__zoom-btn" data-zoom="in" title="확대">' +
+        '<span class="material-symbols-outlined">add</span></button>' +
+      '<button class="mermaid__zoom-btn" data-zoom="out" title="축소">' +
+        '<span class="material-symbols-outlined">remove</span></button>' +
+      '<button class="mermaid__zoom-btn" data-zoom="reset" title="원래 크기">' +
+        '<span class="material-symbols-outlined">fit_screen</span></button>';
+    container.appendChild(controls);
+
+    controls.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-zoom]");
+      if (!btn) return;
+      var action = btn.dataset.zoom;
+      if (action === "in") {
+        zoomAt(ZOOM_STEP, wrap.getBoundingClientRect().width / 2, wrap.getBoundingClientRect().height / 2);
+      } else if (action === "out") {
+        zoomAt(-ZOOM_STEP, wrap.getBoundingClientRect().width / 2, wrap.getBoundingClientRect().height / 2);
+      } else {
+        resetZoom();
+      }
+    });
+
+    /* ── Mouse wheel zoom ── */
+    wrap.addEventListener("wheel", function (e) {
+      e.preventDefault();
+      var delta = e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP;
+      zoomAt(delta, e.clientX, e.clientY);
+    }, { passive: false });
+
+    /* ── Mouse drag pan ── */
+    wrap.addEventListener("mousedown", function (e) {
+      if (e.button !== 0) return;
+      dragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      startPanX = state.panX;
+      startPanY = state.panY;
+      wrap.classList.add("grabbing");
+      container.classList.add("mermaid--panning");
+      e.preventDefault();
+    });
+
+    document.addEventListener("mousemove", function (e) {
+      if (!dragging) return;
+      state.panX = startPanX + (e.clientX - startX);
+      state.panY = startPanY + (e.clientY - startY);
+      applyTransform(false);
+    });
+
+    document.addEventListener("mouseup", function () {
+      if (!dragging) return;
+      dragging = false;
+      wrap.classList.remove("grabbing");
+      container.classList.remove("mermaid--panning");
+    });
+
+    /* ── Touch pinch zoom + pan ── */
+    var lastTouchDist = 0;
+    var lastTouchCenter = null;
+
+    wrap.addEventListener("touchstart", function (e) {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        lastTouchDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        lastTouchCenter = {
+          x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+          y: (e.touches[0].clientY + e.touches[1].clientY) / 2
+        };
+      } else if (e.touches.length === 1 && state.scale > 1) {
+        dragging = true;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        startPanX = state.panX;
+        startPanY = state.panY;
+      }
+    }, { passive: false });
+
+    wrap.addEventListener("touchmove", function (e) {
+      if (e.touches.length === 2 && lastTouchDist) {
+        e.preventDefault();
+        var dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        var delta = (dist - lastTouchDist) * 0.005;
+        var cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        var cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        zoomAt(delta, cx, cy);
+        lastTouchDist = dist;
+      } else if (e.touches.length === 1 && dragging) {
+        e.preventDefault();
+        state.panX = startPanX + (e.touches[0].clientX - startX);
+        state.panY = startPanY + (e.touches[0].clientY - startY);
+        applyTransform(false);
+      }
+    }, { passive: false });
+
+    wrap.addEventListener("touchend", function () {
+      dragging = false;
+      lastTouchDist = 0;
+      lastTouchCenter = null;
+    });
+
+    /* ── Double-click reset ── */
+    wrap.addEventListener("dblclick", function (e) {
+      e.preventDefault();
+      resetZoom();
     });
   }
 

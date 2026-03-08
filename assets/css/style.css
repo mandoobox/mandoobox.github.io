@@ -950,10 +950,57 @@ table::-webkit-scrollbar-thumb,
   background: var(--surface);
   min-height: 4rem;
   transition: min-height 300ms ease;
+  position: relative;
 }
 
 .mermaid--loaded {
   min-height: 0;
+}
+
+/* ── Zoom controls ── */
+.mermaid__zoom-controls {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 2px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+
+.mermaid:hover .mermaid__zoom-controls,
+.mermaid:focus-within .mermaid__zoom-controls,
+.mermaid--panning .mermaid__zoom-controls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mermaid__zoom-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-soft);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.mermaid__zoom-btn:hover {
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+.mermaid__zoom-btn .material-symbols-outlined {
+  font-size: 18px;
 }
 
 /* ── SVG wrapper ── */
@@ -961,7 +1008,12 @@ table::-webkit-scrollbar-thumb,
   display: flex;
   justify-content: center;
   padding: 8px 16px;
-  overflow: visible;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.mermaid__svg-wrap.grabbing {
+  cursor: grabbing;
 }
 
 .mermaid__svg-wrap svg {
@@ -969,6 +1021,8 @@ table::-webkit-scrollbar-thumb,
   max-width: 100%;
   height: auto;
   overflow: visible;
+  transform-origin: 0 0;
+  transition: transform 80ms ease-out;
 }
 
 .mermaid__svg-wrap svg * {

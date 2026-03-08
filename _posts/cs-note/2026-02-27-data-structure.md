@@ -153,7 +153,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  H[Head(머리)] --> N1["노드 1<br/>data,next"]
+  H["Head(머리)"] --> N1["노드 1<br/>data,next"]
   N1 --> N2["노드 2<br/>data,next"]
   N2 --> N3["노드 3<br/>data,next"]
   N3 --> NIL[null]
@@ -1107,7 +1107,7 @@ class UnionFind {
 flowchart LR
   K1["Kruskal: 가중치 순으로 edge 정렬"] --> K2["사이클이 없으면 edge 추가 (Union-Find)"]
   P1["Prim: 시작 node에서 tree 확장"] --> P2["최소 crossing edge 선택 (PQ)"]
-  K2 --> MST[Minimum Spanning Tree(MST)]
+  K2 --> MST["Minimum Spanning Tree(MST)"]
   P2 --> MST
 ```
 
@@ -1278,10 +1278,10 @@ flowchart LR
   M["HashMap key->node"] --> N1[노드 A]
   M --> N2[노드 B]
   M --> N3[노드 C]
-  H[Head MRU(가장 최근)] <--> N1
+  H["Head MRU(가장 최근)"] <--> N1
   N1 <--> N2
   N2 <--> N3
-  N3 <--> T[Tail LRU(가장 오래됨)]
+  N3 <--> T["Tail LRU(가장 오래됨)"]
 ```
 
 
@@ -1376,7 +1376,7 @@ Level 0: 1  2  3  4  5  6  7  8  9
 flowchart TD
   P[문제] --> S[상태 정의]
   S --> R[점화식]
-  R --> B[base case(기저 상태)]
+  R --> B["base case(기저 상태)"]
   B --> O["계산 순서 결정 (top-down/bottom-up)"]
   O --> A[DP 테이블에서 정답 추출]
 ```
@@ -1805,9 +1805,9 @@ class AhoCorasick {
 ```
 
 복잡도:
-- Trie 구축: O(Σ|P_i|) (패턴 길이 총합)
-- 실패 링크 구성: O(Σ|P_i| × σ) (σ = 알파벳 크기)
-- 검색: O(n + 매칭 수), n = 텍스트 길이
+- Trie 구축: `O(Σ|P_i|)` (패턴 길이 총합)
+- 실패 링크 구성: `O(Σ|P_i| × σ)` (σ = 알파벳 크기)
+- 검색: `O(n + 매칭 수)`, n = 텍스트 길이
 
 #### 활용 사례
 

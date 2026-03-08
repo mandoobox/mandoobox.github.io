@@ -7,9 +7,12 @@ labels:
   light: Light
   dark: Dark
   all: 전체
+  search: 검색
+  search_placeholder: 제목, 카테고리, 태그, 내용으로 검색
+  clear_search: 검색어 지우기
   category: 카테고리
   toc: 목차
-  empty_posts: 선택한 카테고리의 게시물이 없습니다.
+  empty_posts: 조건에 맞는 게시물이 없습니다.
 
 fonts:
   body: '"Pretendard", "SUIT", "Noto Sans KR", sans-serif'

@@ -8,23 +8,73 @@
       .replace(/-+/g, "-");
   }
 
+  function normalizeSearchText(value) {
+    if (value == null) {
+      return "";
+    }
+
+    var normalizedValue = String(value);
+
+    if (typeof normalizedValue.normalize === "function") {
+      normalizedValue = normalizedValue.normalize("NFKC");
+    }
+
+    return normalizedValue
+      .toLowerCase()
+      .replace(/[-_/]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
   function setupCategoryFilter() {
     var filterRoot = document.querySelector("[data-category-filter]");
+    var searchInput = document.querySelector("[data-search-input]");
+    var clearButton = document.querySelector("[data-search-clear]");
     var postItems = Array.prototype.slice.call(document.querySelectorAll("[data-post-item]"));
     var emptyMessage = document.querySelector("[data-post-empty]");
 
-    if (!filterRoot || postItems.length === 0) {
+    if ((!filterRoot && !searchInput) || postItems.length === 0) {
       return;
     }
 
-    function applyCategory(category) {
+    var activeCategory = "all";
+    var activeQuery = searchInput ? normalizeSearchText(searchInput.value) : "";
+    var indexedPosts = postItems.map(function (item) {
+      var titleElement = item.querySelector(".post-list__link");
+      var searchSource = item.querySelector("[data-post-search-source]");
+
+      return {
+        element: item,
+        category: item.dataset.category || "",
+        searchText: normalizeSearchText(
+          [
+            titleElement ? titleElement.textContent : "",
+            searchSource ? searchSource.textContent : "",
+          ].join(" ")
+        ),
+      };
+    });
+
+    function syncClearButton() {
+      if (!clearButton || !searchInput) {
+        return;
+      }
+
+      clearButton.hidden = searchInput.value.length === 0;
+    }
+
+    function applyFilters() {
       var visibleCount = 0;
+      var searchTerms = activeQuery ? activeQuery.split(" ") : [];
 
-      postItems.forEach(function (item) {
-        var itemCategory = item.dataset.category || "";
-        var isVisible = category === "all" || itemCategory === category;
+      indexedPosts.forEach(function (post) {
+        var matchesCategory = activeCategory === "all" || post.category === activeCategory;
+        var matchesSearch = searchTerms.length === 0 || searchTerms.every(function (term) {
+          return post.searchText.indexOf(term) !== -1;
+        });
+        var isVisible = matchesCategory && matchesSearch;
 
-        item.hidden = !isVisible;
+        post.element.hidden = !isVisible;
         if (isVisible) {
           visibleCount += 1;
         }
@@ -35,21 +85,45 @@
       }
     }
 
-    filterRoot.addEventListener("click", function (event) {
-      var button = event.target.closest("[data-category-button]");
-      if (!button) {
-        return;
-      }
+    if (filterRoot) {
+      filterRoot.addEventListener("click", function (event) {
+        var button = event.target.closest("[data-category-button]");
+        if (!button) {
+          return;
+        }
 
-      var selectedCategory = button.dataset.categoryButton || "all";
-      var buttons = filterRoot.querySelectorAll("[data-category-button]");
+        activeCategory = button.dataset.categoryButton || "all";
 
-      buttons.forEach(function (filterButton) {
-        filterButton.classList.toggle("is-active", filterButton === button);
+        Array.prototype.slice
+          .call(filterRoot.querySelectorAll("[data-category-button]"))
+          .forEach(function (filterButton) {
+            filterButton.classList.toggle("is-active", filterButton === button);
+          });
+
+        applyFilters();
       });
+    }
 
-      applyCategory(selectedCategory);
-    });
+    if (searchInput) {
+      searchInput.addEventListener("input", function () {
+        activeQuery = normalizeSearchText(searchInput.value);
+        syncClearButton();
+        applyFilters();
+      });
+    }
+
+    if (clearButton && searchInput) {
+      clearButton.addEventListener("click", function () {
+        searchInput.value = "";
+        activeQuery = "";
+        syncClearButton();
+        applyFilters();
+        searchInput.focus();
+      });
+    }
+
+    syncClearButton();
+    applyFilters();
   }
 
   function setupTableWraps() {

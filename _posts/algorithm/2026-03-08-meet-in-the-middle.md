@@ -273,6 +273,56 @@ O(2^(N/2) log 2^(N/2))
 
 그래서 전체는 결국 같은 차수다.
 
+메모리도 왼쪽/오른쪽 부분합을 들고 있어야 하므로:
+
+```text
+O(2^(N/2))
+```
+
+가 필요하다.
+
+### `answer = 0`으로 두면 안 되는 경우
+
+Meet in the Middle에서 자주 나오는 실수다.
+
+```java
+long answer = 0;
+```
+
+로 시작하면 다음 상황에서 틀릴 수 있다.
+
+- 공집합 선택이 허용되지 않는 문제
+- `C`가 음수일 수 있는 문제
+- 원소에 음수가 섞여 있어서 최적합이 음수일 수 있는 문제
+
+즉 `0`은 "아직 답을 못 찾음"이 아니라
+"이미 합 0을 만드는 유효한 해를 찾음"이라는 의미가 되어 버릴 수 있다.
+
+보다 안전하게는 `found` 플래그를 두고,
+문제의 불가능 처리 규칙에 맞춰 반환하는 편이 낫다.
+
+```java
+long answer = Long.MIN_VALUE;
+boolean found = false;
+
+for (long x : left) {
+    long remain = c - x;
+    int idx = upperBound(right, remain) - 1;
+    if (idx >= 0) {
+        answer = Math.max(answer, x + right.get(idx));
+        found = true;
+    }
+}
+
+if (!found) {
+    // 문제 조건에 맞춰 처리:
+    // 예) 불가능 표시, 예외, 별도 sentinel 반환
+}
+```
+
+반대로 "공집합 허용 + 모든 원소 비음수 + `C >= 0`"이 보장되면
+`answer = 0` 초기화도 자연스럽다.
+
 ---
 
 ## 7. 왜 이분 탐색을 쓰는가
@@ -339,6 +389,26 @@ Meet in the Middle은 최댓값만 구하는 데 쓰는 것이 아니다.
 
 - 한쪽 부분합 빈도를 정렬/맵으로 관리하고
 - 다른 쪽과 결합한다
+
+중요한 점은 **존재 여부**와 **개수 세기**가 다르다는 것이다.
+
+- 존재 여부만 필요하면 `HashSet`으로 충분할 수 있다
+- 개수를 세야 하면 같은 부분합이 몇 번 나오는지까지 반영해야 한다
+
+정렬된 리스트를 쓴다면 `lowerBound`, `upperBound` 차이로 개수를 셀 수 있다.
+
+```java
+long count = 0;
+for (long x : left) {
+    long target = k - x;
+    int lo = lowerBound(right, target);
+    int hi = upperBound(right, target);
+    count += (hi - lo);
+}
+```
+
+즉 exact count 문제에서 `HashSet`만 쓰면
+중복 부분합 개수를 잃어버려 오답이 될 수 있다.
 
 ### 3) 모든 쌍의 차이 최소화
 

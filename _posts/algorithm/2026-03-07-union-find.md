@@ -419,7 +419,7 @@ long kruskal(int n, List<Edge> edges) {
 flowchart TD
     A["간선을 비용 순 정렬"] --> B["가장 싼 간선 선택"]
     B --> C{"같은 컴포넌트?"}
-    C -->|Yes| D["건너뛰"]
+    C -->|Yes| D["건너뛰기"]
     C -->|No| E["Union 후 MST에 추가"]
     D --> F{"N-1개 간선?"}
     E --> F

@@ -215,6 +215,10 @@ List<Integer> topoSort(int n, ArrayList<Integer>[] graph, int[] indegree) {
 }
 ```
 
+주의:
+이 구현은 `indegree` 배열을 직접 감소시키므로,
+원본 진입 차수가 나중에도 필요하면 복사본을 만들어 써야 한다.
+
 ---
 
 ## 7. 사이클 판별

@@ -267,7 +267,7 @@ prefix[i + K] - prefix[i]
 
 
 ```java
-int maxFixedLengthSum(int[] arr, int k) {
+long maxFixedLengthSum(int[] arr, int k) {
     int n = arr.length;
     long[] prefix = new long[n + 1];
 
@@ -280,7 +280,7 @@ int maxFixedLengthSum(int[] arr, int k) {
         answer = Math.max(answer, prefix[i + k] - prefix[i]);
     }
 
-    return (int) answer;
+    return answer;
 }
 ```
 

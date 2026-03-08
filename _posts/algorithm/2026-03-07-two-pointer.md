@@ -349,27 +349,24 @@ int countSubarraysSumM(int[] arr, int m) {
 
 ---
 
-## 10. 두 수의 합
+## 10. 두 수의 합: 존재 여부 찾기
 
 
 ```java
 import java.util.*;
 
 class Solution {
-    int countPairs(int[] arr, int target) {
+    boolean hasPairSum(int[] arr, int target) {
         Arrays.sort(arr);
 
         int left = 0;
         int right = arr.length - 1;
-        int count = 0;
 
         while (left < right) {
             int sum = arr[left] + arr[right];
 
             if (sum == target) {
-                count++;
-                left++;
-                right--;
+                return true;
             } else if (sum < target) {
                 left++;
             } else {
@@ -377,7 +374,7 @@ class Solution {
             }
         }
 
-        return count;
+        return false;
     }
 }
 ```
@@ -392,6 +389,14 @@ class Solution {
 - 한 쌍만 찾으면 되는지
 
 를 반드시 확인해야 한다.
+
+특히 "개수"를 세는 문제는 정의를 먼저 확인해야 한다.
+
+- 한 쌍이라도 존재하는가 -> 위 코드면 충분
+- 모든 인덱스 쌍 개수를 세는가 -> 같은 값이 연속된 구간 길이까지 같이 처리해야 함
+- 원소를 한 번씩만 쓰는 최대 매칭 개수인가 -> `sum == target`일 때 `left++`, `right--` 방식이 맞음
+
+즉 양끝 투 포인터의 뼈대는 같아도, `sum == target`일 때 포인터를 어떻게 움직일지는 문제 정의에 따라 달라진다.
 
 ---
 

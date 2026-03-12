@@ -26,6 +26,8 @@ Effective Java 3판의 90개 아이템을 장별로 정리한 글이다. 각 아
 
 **반환 타입의 하위 타입 객체를 돌려줄 수 있다.** `Collections.unmodifiableList()`처럼 구현 클래스를 숨기고 인터페이스만 노출한다. API가 작아지고, 사용자는 구현이 아닌 인터페이스에 의존하게 된다.
 
+**입력 매개변수에 따라 매번 다른 클래스의 객체를 반환할 수 있다.** 반환 타입의 하위 타입이기만 하면 어떤 클래스의 객체든 반환할 수 있다. `EnumSet`은 원소 수에 따라 `RegularEnumSet` 또는 `JumboEnumSet`을 반환한다. 클라이언트는 이 두 클래스의 존재를 모르며, 알 필요도 없다.
+
 ```java
 // 입력에 따라 다른 하위 타입 반환
 public static <E extends Enum<E>> EnumSet<E> noneOf(Class<E> elementType) {
@@ -35,6 +37,8 @@ public static <E extends Enum<E>> EnumSet<E> noneOf(Class<E> elementType) {
         return new JumboEnumSet<>(elementType, universe);
 }
 ```
+
+**정적 팩터리 메서드를 작성하는 시점에는 반환할 객체의 클래스가 존재하지 않아도 된다.** 이 유연함이 서비스 제공자 프레임워크(service provider framework)의 근간이다. JDBC가 대표적인 예로, `DriverManager.getConnection()`은 각 DB 벤더가 제공하는 `Driver` 구현체를 런타임에 로딩한다. Java 6부터는 `ServiceLoader`가 범용 서비스 제공자 프레임워크 역할을 한다.
 
 **정적 팩터리 명명 규칙:**
 
@@ -115,8 +119,6 @@ NyPizza pizza = new NyPizza.Builder(SMALL)
     .addTopping(ONION)
     .build();
 ```
-
-계층 구조에서도 빌더를 쓸 수 있다. 재귀적 타입 파라미터 `Builder<T extends Builder<T>>`와 공변 반환 타이핑(covariant return typing)을 활용하면 하위 클래스의 빌더가 상위 빌더를 반환하지 않아도 된다.
 
 매개변수가 4개를 넘기기 시작하면 빌더를 고려하라. 처음부터 빌더로 시작하는 편이 나을 때가 많다.
 
@@ -286,7 +288,7 @@ flowchart TD
 
 자기 메모리를 직접 관리하는 클래스란, 원소를 담은 배열의 '활성 영역'과 '비활성 영역'을 GC가 알 수 없는 경우를 말한다. Stack 예시처럼 비활성 영역의 원소를 null로 밀어야 GC가 회수할 수 있다.
 
-캐시 메모리 누수는 엔트리의 유효 기간이 명확하지 않은 경우에 발생한다. 키를 참조하는 동안만 엔트리가 유효하다면 `WeakHashMap`을 쓰면 키가 GC될 때 엔트리도 함께 제거된다. 백그라운드 스레드(`ScheduledThreadPoolExecutor`) 또는 새 엔트리 추가 시 부수 작업으로 정리하는 방식도 있다.
+캐시 메모리 누수는 엔트리의 유효 기간이 명확하지 않은 경우에 발생한다. 키를 외부에서 참조하는 동안만 엔트리가 유효하다면 `WeakHashMap`을 쓰라. 키에 대한 강한 참조가 사라져 GC 대상이 되면, 이후 Map의 내장 메서드(`get`, `put` 등)가 호출될 때 내부적으로 해당 엔트리를 제거한다. 백그라운드 스레드(`ScheduledThreadPoolExecutor`) 또는 새 엔트리 추가 시 부수 작업으로 정리하는 방식도 있다.
 
 null 처리는 예외적 상황에서만 하고, 가장 좋은 방법은 변수의 유효 범위를 최소화하는 것이다(Item 57).
 
@@ -317,7 +319,7 @@ public class Foo {
 
 ### Item 9. try-finally보다는 try-with-resources를 사용하라
 
-자원 회수가 필요한 코드에는 무조건 try-with-resources를 쓰라.
+`AutoCloseable` 인터페이스를 구현한 자원을 회수할 때는 예외 없이(반드시) try-with-resources를 쓰라.
 
 ```java
 // try-finally: 자원이 둘이면 중첩이 필요하고 예외가 삼켜질 수 있음
@@ -678,7 +680,7 @@ public final class Complex {
 
 ### Item 18. 상속보다는 컴포지션을 사용하라
 
-상속은 캡슐화를 깨뜨린다. 상위 클래스가 내부 구현을 바꾸면 하위 클래스가 오동작할 수 있다.
+패키지 경계를 넘어 다른 구체 클래스를 상속하는 '구현 상속(Implementation Inheritance)'은 캡슐화를 깨뜨릴 수 있다. 상위 클래스가 내부 구현을 바꾸면 하위 클래스가 오동작할 수 있다.
 
 ```java
 // 상속의 문제 — addAll이 내부에서 add를 호출하므로 addCount가 두 배가 됨
@@ -749,7 +751,7 @@ public class InstrumentedSet<E> extends ForwardingSet<E> {
 
 상속은 is-a 관계일 때만, 그리고 상위 클래스의 API에 결함이 없을 때만 써라.
 
-실제 JDK에서의 위반 사례: `Stack extends Vector`, `Properties extends Hashtable`는 모두 is-a 관계가 아닌데 상속을 사용한 경우다. `Properties`의 `getProperty(key)`는 `Hashtable`의 `get(key)`과 다른 결과를 낼 수 있어 혹란을 준다.
+실제 JDK에서의 위반 사례: `Stack extends Vector`, `Properties extends Hashtable`는 모두 is-a 관계가 아닌데 상속을 사용한 경우다. `Properties`의 `getProperty(key)`는 `Hashtable`의 `get(key)`과 다른 결과를 낼 수 있어 혼란을 준다.
 
 ---
 
@@ -905,7 +907,7 @@ flowchart LR
     E["Wildcard<br/>List&lt;?&gt;"] -->|"safe"| F["✅ null 외 원소 추가 불가"]
 ```
 
-실무에서 자주 케는 실수: 레거시 코드에서 `List`로 받아 어디엔가에서 `(String) list.get(0)` 캐스팅. 이런 코드는 `List<String>` 또는 `List<?>`로 리팩터링해야 한다.
+실무에서 자주 겠는 실수: 레거시 코드에서 `List`로 받아 어딜가에서 `(String) list.get(0)` 캐스팅. 이런 코드는 `List<String>` 또는 `List<?>`로 리팩터링해야 한다.
 
 ---
 
@@ -1496,7 +1498,7 @@ for (int i = 0; i < 3; i++) list.remove(i);
 
 특히 `ObjectOutputStream`은 `write`와 `writeObject` 두 가지 메서드를 모두 제공하지만, 다중정의 없이 이름 자체로 구분한 좋은 예다.
 
-Java 5에서 오토박싱이 도입되면서 `List.remove(int)` vs `List.remove(Object)`의 혹란이 생겼다. `List<Integer>`에서 `remove(3)`은 인덱스 3의 원소를 제거하는지, 값 3을 제거하는지 모호해진다.
+Java 5에서 오토박싱이 도입되면서 `List.remove(int)` vs `List.remove(Object)`의 혼란이 생겼다. `List<Integer>`에서 `remove(3)`은 인덱스 3의 원소를 제거하는지, 값 3을 제거하는지 모호해진다.
 
 ---
 
@@ -1525,7 +1527,7 @@ null을 반환하면 클라이언트에 null 검사 코드가 강제된다. 빈 
 비어있는지 확인하지 않고 바로 반환하는 것도 가능하다:
 
 ```java
-// 더 간결한 방식 — 어럴때든 새 리스트 생성
+// 더 간결한 방식 — 어떨 때든 새 리스트 생성
 public List<Cheese> getCheeses() {
     return new ArrayList<>(cheesesInStock);
 }
@@ -1690,7 +1692,7 @@ record FieldKey(String className, String fieldName, String typeName) { }
 
 ### Item 63. 문자열 연결은 느리니 주의하라
 
-`+` 연산자로 문자열 n개를 연결하면 시간 복잡도가 $O(n^2)$이다. `String`이 불변이라 매번 양쪽 내용을 복사하기 때문이다. 많은 문자열을 결합할 때는 `StringBuilder`를 쓰라.
+반복문 안에서 `+` 연산자를 반복 사용해 문자열을 계속 연결하면, 매번 새로운 문자열을 생성하고 복사하므로 시간 복잡도가 $O(n^2)$이 된다. `String`이 불변이라 매번 양쪽 내용을 복사하기 때문이다. 많은 문자열을 결합할 때는 `StringBuilder`를 쓰라.
 
 ```java
 // 느림: O(n²)
@@ -1763,7 +1765,7 @@ public final class NativeMath {
 
 > "섣부른 최적화는 만악의 근원이다" — Donald Knuth
 
-빠른 프로그램이 아닌 좋은 프로그램을 작성하면 속도는 따라온다. 성능을 제한하는 설계 결정(API, wire-level 프로토콜, 데이터 포맷)에만 신경 쓰라. 최적화 전후에 반드시 프로파일러로 성능을 측정하라.
+빠른 프로그램이 아닌 좋은 프로그램을 작성하라. 설계가 좋으면 추후 성능 문제가 발생했을 때 전체 아키텍처를 훼손하지 않고 효과적으로 최적화할 수 있다. 성능을 제한하는 설계 결정(API, wire-level 프로토콜, 데이터 포맷)에만 신경 쓰라. 최적화 전후에 반드시 프로파일러로 성능을 측정하라.
 
 ---
 
@@ -2209,15 +2211,20 @@ private void readObject(ObjectInputStream s) throws InvalidObjectException {
 
 ## 참고 자료
 
-- [Effective Java, 3rd Edition | InformIT](https://www.informit.com/store/effective-java-9780134686042)
-- [JDK 21 Documentation Home | Oracle](https://docs.oracle.com/en/java/javase/21/)
-- [Java SE 21 API Specification | Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/index.html)
-- [The Java Language Specification, Java SE 21 Edition | Oracle](https://docs.oracle.com/javase/specs/jls/se21/html/index.html)
-- [Object (Java SE 21 & JDK 21) | Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html)
-- [AutoCloseable (Java SE 21 & JDK 21) | Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/AutoCloseable.html)
-- [Package java.util.stream (Java SE 21 & JDK 21) | Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html)
-- [Package java.util.concurrent (Java SE 21 & JDK 21) | Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html)
-- [SplittableRandom (Java SE 21 & JDK 21) | Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SplittableRandom.html)
-- [Java Native Interface Specification | Oracle](https://docs.oracle.com/en/java/javase/21/docs/specs/jni/)
-- [Java Object Serialization Specification | Oracle](https://docs.oracle.com/en/java/javase/21/docs/specs/serialization/)
-- [JEP 421: Deprecate Finalization for Removal | OpenJDK](https://openjdk.org/jeps/421)
+- [Effective Java, 3rd Edition - InformIT](https://www.informit.com/store/effective-java-9780134686042)
+- [JDK 21 Documentation Home - Oracle](https://docs.oracle.com/en/java/javase/21/)
+- [Java SE 21 API Specification - Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/index.html)
+- [The Java Language Specification, Java SE 21 Edition - Oracle](https://docs.oracle.com/javase/specs/jls/se21/html/index.html)
+- [Object (Java SE 21 & JDK 21) - Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html)
+- [AutoCloseable (Java SE 21 & JDK 21) - Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/AutoCloseable.html)
+- [Package java.util.stream (Java SE 21 & JDK 21) - Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html)
+- [Package java.util.concurrent (Java SE 21 & JDK 21) - Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html)
+- [SplittableRandom (Java SE 21 & JDK 21) - Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SplittableRandom.html)
+- [Java Native Interface Specification - Oracle](https://docs.oracle.com/en/java/javase/21/docs/specs/jni/)
+- [Java Object Serialization Specification - Oracle](https://docs.oracle.com/en/java/javase/21/docs/specs/serialization/)
+- [JEP 421: Deprecate Finalization for Removal - OpenJDK](https://openjdk.org/jeps/421)
+- [JEP 395: Records - OpenJDK](https://openjdk.org/jeps/395)
+- [JEP 361: Switch Expressions - OpenJDK](https://openjdk.org/jeps/361)
+- [Java Collections Framework Overview - Oracle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/doc-files/coll-index.html)
+- [Project Valhalla (Value Objects) - OpenJDK](https://openjdk.org/projects/valhalla/)
+- [Project Loom (Inline Classes) - OpenJDK](https://openjdk.org/projects/loom/)
